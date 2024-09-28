@@ -13,15 +13,20 @@ html, body {
 
 #app {
     display: flex;
-    justify-content: space-between;
+    justify-content: center; 
     width: 80%;
-    height: auto;
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
     background-color: rgba(0, 0, 0, 0.7);
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.battle-arena {
+    display: flex; 
+    justify-content: space-between; 
+    width: 100%;
 }
 
 .character {
@@ -38,7 +43,7 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 200px;  /* Reduz a altura para caber na tela */
+    height: 200px;  
     margin-bottom: 15px;
     background-color: rgba(0, 0, 0, 0.2);
     border-radius: 5px;
@@ -47,11 +52,11 @@ html, body {
 
 .sprite img {
     max-width: 100%;
-    max-height: 100%;  /* Limita a altura para evitar que fique fora de proporção */
+    max-height: 100%;  
 }
 
 .life-bar {
-    height: 20px;  /* Reduz a altura da barra de vida */
+    height: 20px;  
     width: 100%;
     background-color: #9ce39e;
     color: #32450a;
@@ -65,13 +70,13 @@ html, body {
 
 .actions {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);  /* Coloca os botões em duas colunas */
+    grid-template-columns: repeat(2, 1fr);  
     gap: 8px;
     margin-top: 10px;
 }
 
 button {
-    padding: 8px;  /* Reduz o padding para que os botões sejam menores */
+    padding: 8px;  
     font-size: 0.9rem;
     border: none;
     border-radius: 5px;
@@ -88,6 +93,11 @@ button:hover {
 
 button:active {
     transform: translateY(2px);
+}
+
+button:disabled {
+    background-color: #555; /* Cor para botões desativados */
+    cursor: not-allowed; /* Indica que o botão não é clicável */
 }
 
 .final {
@@ -109,7 +119,7 @@ button:active {
 
 @media (max-width: 768px) {
     #app {
-        flex-direction: column;  /* Empilha os personagens verticalmente em telas menores */
+        flex-direction: column;  
     }
 
     .character {
@@ -118,6 +128,6 @@ button:active {
     }
 
     .actions {
-        grid-template-columns: repeat(1, 1fr);  /* Coloca os botões em uma única coluna em telas pequenas */
+        grid-template-columns: repeat(1, 1fr);  
     }
 }

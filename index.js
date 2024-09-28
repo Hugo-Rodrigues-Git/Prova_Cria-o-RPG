@@ -8,8 +8,8 @@ createApp({
             gameResultMessage: '',
             hero: {
                 name: "Kraytos",
-                life: 175,
-                maxLife: 175,
+                life: 200,
+                maxLife: 200,
                 Percentil: 100,
                 blocking: false,
                 magicMode: false,
@@ -25,17 +25,15 @@ createApp({
         };
     },
     methods: {
-        // Método de ataque
         attack(isHero) {
             if (isHero && this.currentTurn === 'hero') {
-                this.handleAttack(this.villain, this.hero, 20);
+                this.handleAttack(this.villain, this.hero, 25);
                 this.endHeroTurn();
             } else if (!isHero && this.currentTurn === 'villain') {
-                this.handleAttack(this.hero, this.villain, 15);
+                this.handleAttack(this.hero, this.villain, 20);
                 this.endVillainTurn();
             }
         },
-        // Método de defesa
         defend(isHero) {
             if (isHero && this.currentTurn === 'hero') {
                 this.hero.blocking = true;
@@ -47,24 +45,30 @@ createApp({
                 this.endVillainTurn();
             }
         },
-        // Uso de poção
         usePotion(isHero) {
             if (isHero && this.currentTurn === 'hero') {
-                this.handleHealing(this.hero, 25);
+                this.hero.life = Math.min(this.hero.life + 30, this.hero.maxLife); // Cura até 30
+                this.hero.Percentil = ((this.hero.life / this.hero.maxLife) * 100);
                 this.endHeroTurn();
             } else if (!isHero && this.currentTurn === 'villain') {
-                this.handleHealing(this.villain, 30);
+                this.villain.life = Math.min(this.villain.life + 35, this.villain.maxLife); // Cura até 25
+                this.villain.Percentil = ((this.villain.life / this.villain.maxLife) * 100);
                 this.endVillainTurn();
             }
         },
-        // Método para alternar modo mágico
         toggleMagicMode(isHero) {
             if (isHero && this.currentTurn === 'hero') {
-                this.hero.magicMode = !this.hero.magicMode;
+                console.log("Kraytos ativa o modo mágico!");
+                this.handleMagicAttack(this.villain, this.hero, 40, 10);
+                this.hero.magicMode = !this.hero.magicMode; // Alterna o modo mágico
                 this.endHeroTurn();
+            } else if (!isHero && this.currentTurn === 'villain') {
+                console.log("Mestre dos Magos ativa o modo mágico!");
+                this.handleMagicAttack(this.hero, this.villain, 38, 10);
+                this.villain.magicMode = !this.villain.magicMode; // Alterna o modo mágico
+                this.endVillainTurn();
             }
         },
-        // Função auxiliar para ataque
         handleAttack(target, attacker, maxDmg) {
             if (target.blocking) {
                 console.log("Ataque bloqueado!");
@@ -79,41 +83,43 @@ createApp({
                 }
             }
         },
-        // Função auxiliar para cura
-        handleHealing(character, healAmount) {
-            character.life += this.GenerateRNG(healAmount);
-            if (character.life > character.maxLife) {
-                character.life = character.maxLife;
+        handleMagicAttack(target, attacker, targetDmg, selfDmg) {
+            let danoAoOponente = this.GenerateRNG(targetDmg);
+            let danoAoUsuario = this.GenerateRNG(selfDmg);
+            
+            target.life -= danoAoOponente;
+            target.Percentil = ((target.life / target.maxLife) * 100);
+
+            attacker.life -= danoAoUsuario;
+            attacker.Percentil = ((attacker.life / attacker.maxLife) * 100);
+
+            console.log(`${attacker.name} usa magia: ${danoAoOponente} de dano no oponente e ${danoAoUsuario} de dano próprio!`);
+
+            if (target.life <= 0) {
+                target.life = 0;
+                this.endGame(attacker.name);
             }
-            character.Percentil = ((character.life / character.maxLife) * 100);
+
+            if (attacker.life <= 0) {
+                attacker.life = 0;
+                this.endGame(target.name);
+            }
         },
-        // Gera um valor aleatório
         GenerateRNG(maxValue) {
             return Math.floor(Math.random() * maxValue);
         },
-        // Finaliza o turno do herói e passa para o vilão
         endHeroTurn() {
-            this.currentTurn = 'villain';
-            this.villainAction();
+            this.currentTurn = 'villain'; // Muda para o turno do vilão
         },
-        // Finaliza o turno do vilão e passa para o herói
         endVillainTurn() {
-            this.currentTurn = 'hero';
+            this.currentTurn = 'hero'; // Muda para o turno do herói
         },
-        // Ações automáticas do vilão
-        villainAction() {
-            let actions = ['attack', 'defend', 'usePotion'];
-            const action = actions[this.GenerateRNG(actions.length)];
-            this[action](false);
-        },
-        // Finalizar o jogo
         endGame(winner) {
             this.gameOver = true;
             this.gameResultMessage = `${winner} venceu o jogo!`;
         },
-        // Reiniciar o jogo
         resetGame() {
-            this.hero.life = 175;
+            this.hero.life = 200;
             this.hero.Percentil = 100;
             this.villain.life = 200;
             this.villain.Percentil = 100;

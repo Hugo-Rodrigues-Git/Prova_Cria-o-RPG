@@ -8,8 +8,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <audio id="audio" src="./Music/videoplayback.m4a" autoplay loop></audio>
-
     <div id="app">
         <!-- Status do jogo -->
         <div v-if="gameOver" class="final">
@@ -17,34 +15,37 @@
             <button @click="resetGame">Tentar novamente</button>
         </div>
 
-        <!-- Herói: Kraytos -->
-        <div class="character">
-            <div :style="{width: hero.Percentil + '%'}" class="life-bar">{{ hero.life }}</div>
-            <div class="sprite"><img src="images/hero_sprite.png" class="heroSprite"></div>
-            <h1>{{ hero.name }}</h1>
-            <!-- Ações do Herói (disponíveis apenas no turno do herói) -->
-            <div class="actions" v-if="currentTurn === 'hero' && !gameOver">
-                <button @click="attack(true)">Atacar</button>
-                <button @click="defend(true)">Defender</button>
-                <button @click="usePotion(true)">Usar Poção</button>
-                <button @click="toggleMagicMode(true)">Ativar/Desativar Magia</button>
+        <div class="battle-arena">
+            <!-- Herói: Kraytos -->
+            <div class="character hero">
+                <div :style="{width: hero.Percentil + '%'}" class="life-bar">{{ hero.life }}</div>
+                <div class="sprite"><img src="images/hero_sprite.png" class="heroSprite"></div>
+                <h1>{{ hero.name }}</h1>
+                <!-- Ações do Herói (disponíveis apenas no turno do herói) -->
+                <div class="actions" v-if="currentTurn === 'hero' && !gameOver">
+                    <button @click="attack(true)">Atacar Vilão</button>
+                    <button @click="defend(true)">Defender do vilão</button>
+                    <button @click="usePotion(true)">Usar Poção em Kraytos</button>
+                    <button @click="toggleMagicMode(true)">Ativar/Desativar Magia de Kraytos</button>
+                </div>
             </div>
-        </div>
 
-        <!-- Vilão: Mestre dos Magos -->
-        <div class="character">
-            <div :style="{width: villain.Percentil + '%'}" class="life-bar">{{ villain.life }}</div>
-            <div class="sprite"><img src="images/villain_sprite.png" class="villainSprite"></div>
-            <h1>{{ villain.name }}</h1>
+            <!-- Vilão: Mestre dos Magos -->
+            <div class="character villain">
+                <div :style="{width: villain.Percentil + '%'}" class="life-bar">{{ villain.life }}</div>
+                <div class="sprite"><img src="images/villain_sprite.png" class="villainSprite"></div>
+                <h1>{{ villain.name }}</h1>
+                <!-- Ações do Vilão (disponíveis apenas no turno do vilão) -->
+                <div class="actions" v-if="currentTurn === 'villain' && !gameOver">
+                    <button @click="attack(false)">Atacar Kraytos</button>
+                    <button @click="defend(false)">Defender de Kraytos</button>
+                    <button @click="usePotion(false)">Usar Poção em Mestre dos Magos</button>
+                    <button @click="toggleMagicMode(false)">Ativar/Desativar do Magia Mestre dos Magos</button>
+                </div>
+            </div>
         </div>
     </div>
 
     <script src="index.js"></script>
-    <script>
-        window.onload = () => {
-            var audio = document.getElementById("audio");
-            audio.volume = 0.30;
-        }
-    </script>
 </body>
 </html>
